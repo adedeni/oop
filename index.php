@@ -12,6 +12,7 @@
     echo "<br>"; 
     var_dump(config::get('mysql/host')); ;
     echo "<br>";
+    DB::getInstance();// THIS CONNECT TO DATABASE
     ?>
 </body>
 </html>
