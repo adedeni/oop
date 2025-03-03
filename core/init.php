@@ -6,7 +6,7 @@
         'host' => '127.0.0.1', //localhost address
         'username' =>'root',
         'password' => '',
-        'db' => 'learning_oop' //database name
+        'db' => 'oop' //database name
     ],
     'remember' => [
         'cookie_name' => 'hash', //you can name it anything

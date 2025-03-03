@@ -8,7 +8,6 @@
 <body>
     <?php
     require_once 'core/init.php';
-    echo "for OOP!";
     echo "<br>"; 
     var_dump(config::get('mysql/host')); ;
     echo "<br>";

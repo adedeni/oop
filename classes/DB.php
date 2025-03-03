@@ -7,10 +7,10 @@ class DB {
             $_results,
             $_count = 0;  
 
-private function __construct() {
+private function __construct() {//contructor is used to run the operation of the class at every instantiating
     try{
         $this->_pdo = new PDO('mysql:host=' . config::get('mysql/host') . ';dbname=' . config::get('mysql/db'), config::get('mysql/username'), config::get('mysql/password'));
-        echo '<br>  Connected';
+        //echo '<br>  Connected';
     } catch(PDOException $e){
         die($e->getMessage());
     }
@@ -23,8 +23,10 @@ public static function getInstance() {
     return self::$_instance;
 }
 public function query($sql, $params = []){
-    $this->_error = false;
-    if($this->_query = $this->_pdo->prepare($sql)){
+    $this->_error = false; //reset the error back to false
+    if($this->_query = $this->_pdo->prepare($sql)){//prepare query
+        echo "success";
+        exit ();
         $x = 1;
         if(count($params)){
             foreach($params as $param){
