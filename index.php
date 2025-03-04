@@ -37,6 +37,35 @@
     // } else {
     //     echo $user->first()->username;
     // }
+    // $db = DB::getInstance();
+    // $user = $db->insert('users', [
+    //     'username' => 'adedeni',
+    //     'password' => 'password',
+    //     'salt' => 'salt',
+    //     'name' => 'Adeshina Olayode',//i can not leave this because it has no default value and set to not null in the database, including joined and group column
+    //     'joined' => date('Y-m-d H:i:s'),
+    //     'group' => 1
+    // ]);
+
+    // if($user) {
+    //     echo "Data inserted successfully";
+    // } else {
+    //     echo "Data not inserted.<br>";
+    //     echo "SQL Error Message: " . $db->getError() . "<br>";
+    // }
+    $db = DB::getInstance();
+    $user = $db->update('users', 5, [
+        'username' => 'opasix',
+        'password' => 'updatedPassword',
+        'name' => 'Adeshina Saheed'
+    ]);
+
+    if($user) {
+        echo "Data updated successfully";
+    } else {
+        echo "Data not updated.<br>";
+        echo "SQL Error Message: " . $db->getError() . "<br>";
+    }
     ?>
 </body>
 </html>

@@ -5,7 +5,8 @@ class DB {
             $_query,
             $_error = false,
             $_results,
-            $_count = 0;  
+            $_count = 0,
+            $_errorMessage = '';
 
 private function __construct() {//contructor is used to run the operation of the class at every instantiating
     try {
@@ -18,6 +19,7 @@ private function __construct() {//contructor is used to run the operation of the
         return;
     }
 }
+
 //THIS IS TO CHECK IF WE HAVE INSTANTIATE THE OBJECT AND INSTANTIATE IF NOT
 public static function getInstance() {
     if (!isset(self::$_instance)) {
@@ -25,34 +27,37 @@ public static function getInstance() {
     }
     return self::$_instance;
 }
-public function query($sql, $params = []){
-    $this->_error = false; //reset the error back to false, because we can perform multiple queries and we do not want to return the error of the previous query
+
+public function query($sql, $params = []) {
+    $this->_error = false;//this is to reset the error to false
+    $this->_errorMessage = '';//this is to reset the error message to an empty string
+    
     try {
-        if($this->_query = $this->_pdo->prepare($sql)){//check if query was prepared successfully
-            //echo "query prepared success";//this is to check if the query was prepared successfully
-            //exit ();
-            $x = 1;//this is the position of the parameter and $param is the value of the parameter
-            if(count($params)){
-                foreach($params as $param){
+        if($this->_query = $this->_pdo->prepare($sql)) {//this is to prepare the sql query
+            $x = 1;
+            if(count($params)) {
+                foreach($params as $param) {
                     $this->_query->bindValue($x, $param);
-                    $x++;//this is to increment the position of the parameter for each loop
+                    $x++;
                 }
             }
-            //this is to execute the query even when there is no parameter, just execute the query anyway
-            if($this->_query->execute()){
-                //echo "query executed successfully";//this is to check if the query was executed successfully
-                $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);//store the results in the $_results property
-                $this->_count = $this->_query->rowCount();
+            
+            if($this->_query->execute()) {//this is to execute the sql query
+                $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);//this is to fetch all the results from the query
+                $this->_count = $this->_query->rowCount();//this is to count the number of rows affected by the query
             } else {
-                $this->_error = true;//set the error to true if the query is not executed successfully
+                $this->_error = true;
+                $this->_errorMessage = $this->_query->errorInfo()[2];
             }
         }
     } catch(PDOException $e) {
         $this->_error = true;
+        $this->_errorMessage = $e->getMessage();
         error_log($e->getMessage());
     }
-    return $this;//this is to return the object of the class
+    return $this;
 }
+
 public function action($action, $table, $where = []){//this is to perform any action on the datebase, e.g get, delete, update, insert
     if(count($where) === 3){
         $operators = ['=', '>', '<', '>=', '<='];//this are the operators that can be used in the query
@@ -68,12 +73,57 @@ public function action($action, $table, $where = []){//this is to perform any ac
     }
     return false;
 }
+
 public function get($table, $where){//this is to get all data from the database
     return $this->action('SELECT *', $table, $where);
 }
+
 public function delete($table, $where){//this is to delete data from the database
     return $this->action('DELETE', $table, $where);
 }
+
+public function insert($table, $fields = []) {//this is to insert data into the database
+        $keys = array_keys($fields);//this is to get the keys of the array
+        $values = '';//this is to store the values of the array
+        $x = 1;//this is to count the number of fields
+        
+        foreach($fields as $field) {
+            $values .= '?';//this is to store the values of the array
+            if($x < count($fields)) {
+                $values .= ', ';//this is to add a comma to the values
+            }
+            $x++;
+        }
+        
+        $sql = "INSERT INTO {$table} (`" . implode('`, `', $keys) . "`) VALUES ($values)";//this is to insert the data into the database        
+        
+        $query = $this->query($sql, $fields);//this is to execute the query
+        if(!$query->error()) {//this is to check if the query is successful
+            return true;
+        }
+    return false;   
+}
+
+public function update($table, $id, $fields = []) {
+    $set = '';
+    $x = 1;
+
+    foreach($fields as $name => $value) {
+        $set .= "`{$name}` = ?";//this is to add the name and value to the set
+        if($x < count($fields)) {
+            $set .= ', ';//this is to add a comma to the set
+        }
+        $x++;
+    }
+
+    $sql = "UPDATE {$table} SET {$set} WHERE id = {$id}";
+    
+    if(!$this->query($sql, array_values($fields))->error()) {//this is to check if the query is successful
+        return true;
+    }
+    return false;
+}
+ 
 public function results(){//this method returns the results of the query as an array
     return $this->_results;
 }
@@ -86,5 +136,7 @@ public function error(){
 public function count(){//this method returns the number of rows affected by the query, or results returned by the query
    return $this->_count;
 }
-
+public function getError() {
+    return $this->_errorMessage;
+}
 }
