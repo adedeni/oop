@@ -74,6 +74,12 @@ public function get($table, $where){//this is to get all data from the database
 public function delete($table, $where){//this is to delete data from the database
     return $this->action('DELETE', $table, $where);
 }
+public function results(){//this method returns the results of the query as an array
+    return $this->_results;
+}
+public function first(){//this method returns the first result of the query as an object
+    return $this->results()[0];
+}
 public function error(){
     return $this->_error;//this by default returns false and if there has beenn error this method will return true, remember that the error property is set to false by default at the top of the class
 }
