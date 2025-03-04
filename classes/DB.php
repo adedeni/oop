@@ -10,11 +10,7 @@ class DB {
 private function __construct() {//contructor is used to run the operation of the class at every instantiating
     try {
         $this->_pdo = new PDO('mysql:host=' . Config::get('mysql/host') . ';dbname=' . Config::get('mysql/db'), config::get('mysql/username'), Config::get('mysql/password'));
-        //echo 'this DB is 
-        // connected';//this is 
-        // to check if the 
-        // connection is 
-        // successful
+        //echo 'this DB is  connected';//this is to check if the connection is successful
         $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch(PDOException $e) {
         $this->_error = true;
@@ -70,15 +66,18 @@ public function action($action, $table, $where = []){//this is to perform any ac
             }
         }
     }
+    return false;
 }
-public function get($table, $where){//this is to get data from the database
+public function get($table, $where){//this is to get all data from the database
+    return $this->action('SELECT *', $table, $where);
 }
 public function delete($table, $where){//this is to delete data from the database
+    return $this->action('DELETE', $table, $where);
 }
 public function error(){
     return $this->_error;//this by default returns false and if there has beenn error this method will return true, remember that the error property is set to false by default at the top of the class
 }
-public function count(){
+public function count(){//this method returns the number of rows affected by the query, or results returned by the query
    return $this->_count;
 }
 
