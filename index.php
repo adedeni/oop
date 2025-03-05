@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Home</title>
 </head>
 <body>    
     <?php
@@ -53,19 +53,19 @@
     //     echo "Data not inserted.<br>";
     //     echo "SQL Error Message: " . $db->getError() . "<br>";
     // }
-    $db = DB::getInstance();
-    $user = $db->update('users', 5, [
-        'username' => 'opasix',
-        'password' => 'updatedPassword',
-        'name' => 'Adeshina Saheed'
-    ]);
+    // $db = DB::getInstance();
+    // $user = $db->update('users', 5, [
+    //     'username' => 'opasix',
+    //     'password' => 'updatedPassword',
+    //     'name' => 'Adeshina Saheed'
+    // ]);
 
-    if($user) {
-        echo "Data updated successfully";
-    } else {
-        echo "Data not updated.<br>";
-        echo "SQL Error Message: " . $db->getError() . "<br>";
-    }
+    // if($user) {
+    //     echo "Data updated successfully";
+    // } else {
+    //     echo "Data not updated.<br>";
+    //     echo "SQL Error Message: " . $db->getError() . "<br>";
+    // }
     ?>
 </body>
 </html>
