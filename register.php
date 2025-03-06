@@ -58,13 +58,13 @@ ini_set('display_errors', 1);
                 
                 $created = $user->create($userData);
                 
-                if($created) {
+                // if($created) {
                     Session::flash('success', 'You have registered successfully');
-                    header('Location: index.php');
-                    exit();
-                } else {
-                    //echo "<br>Creation failed. Database Error: " . $user->getLastError() . "<br>";//for debugging purposes
-                }
+                    //Redirect::to('404');//this is to redirect to the error 404 page
+                    Redirect::to('index.php');
+                // } else {
+                //     //echo "<br>Creation failed. Database Error: " . $user->getLastError() . "<br>";// for debugging purposes
+                // }
                 
             } catch(Exception $e) {
                 echo "Registration failed: " . $e->getMessage() . "<br>";//for debugging purposes

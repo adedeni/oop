@@ -99,9 +99,9 @@ public function insert($table, $fields = []) {
         $sql = "INSERT INTO {$table} (`" . implode('`, `', $keys) . "`) VALUES ({$values})";
         
         // Debug: Print the SQL query and values
-        echo "SQL Query: " . $sql . "<br>";
-        echo "Values: ";
-        var_dump(array_values($fields));
+        // echo "SQL Query: " . $sql . "<br>";
+        // echo "Values: ";
+        // var_dump(array_values($fields));
         
         $query = $this->query($sql, $fields);
         

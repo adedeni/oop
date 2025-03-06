@@ -11,7 +11,7 @@ class User{
     public function create($fields = []) {
         try {
             // Debug: Print SQL query before execution
-            echo "Attempting database insertion...<br>";
+            //echo "Attempting database insertion...<br>";//for debugging purposes
             
             if(!$this->_db->insert('users', $fields)) {
                 // Get the specific database error
