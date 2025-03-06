@@ -82,26 +82,40 @@ public function delete($table, $where){//this is to delete data from the databas
     return $this->action('DELETE', $table, $where);
 }
 
-public function insert($table, $fields = []) {//this is to insert data into the database
-        $keys = array_keys($fields);//this is to get the keys of the array
-        $values = '';//this is to store the values of the array
-        $x = 1;//this is to count the number of fields
+public function insert($table, $fields = []) {
+    try {
+        $keys = array_keys($fields);
+        $values = '';
+        $x = 1;
         
         foreach($fields as $field) {
-            $values .= '?';//this is to store the values of the array
+            $values .= '?';
             if($x < count($fields)) {
-                $values .= ', ';//this is to add a comma to the values
+                $values .= ', ';
             }
             $x++;
         }
         
-        $sql = "INSERT INTO {$table} (`" . implode('`, `', $keys) . "`) VALUES ($values)";//this is to insert the data into the database        
+        $sql = "INSERT INTO {$table} (`" . implode('`, `', $keys) . "`) VALUES ({$values})";
         
-        $query = $this->query($sql, $fields);//this is to execute the query
-        if(!$query->error()) {//this is to check if the query is successful
-            return true;
+        // Debug: Print the SQL query and values
+        echo "SQL Query: " . $sql . "<br>";
+        echo "Values: ";
+        var_dump(array_values($fields));
+        
+        $query = $this->query($sql, $fields);
+        
+        if($query->error()) {
+            $this->_errorMessage = $query->_query->errorInfo()[2];
+            echo "Database Error: " . $this->_errorMessage . "<br>";
+            return false;
         }
-    return false;   
+        return true;
+    } catch(Exception $e) {
+        $this->_errorMessage = $e->getMessage();
+        echo "Exception: " . $this->_errorMessage . "<br>";
+        return false;
+    }
 }
 
 public function update($table, $id, $fields = []) {

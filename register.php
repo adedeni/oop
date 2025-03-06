@@ -39,14 +39,42 @@ ini_set('display_errors', 1);
             'matches' => 'password'
         ]
         ]);
-        if(!$validation->passed()){
+        if($validation->passed()){
+            $user = new User();
+            $salt = Hash::salt(32);//32 here is the lenght of salt we plan to use as set in our database
+            try{
+                //echo "Attempting to create user with data:<br>";//for debugging purposes
+                $userData = [
+                    'name' => Input::get('name'),
+                    'username' => Input::get('username'),
+                    'password' => Hash::make(Input::get('password'), $salt),
+                    'salt' => $salt,
+                    'joined' => date('Y-m-d H:i:s'),
+                    'group' => 1
+                ];
+                //var_dump($userData);//for debugging purposes
+                
+                //echo "<br>About to attempt user creation...<br>";//for debugging purposes
+                
+                $created = $user->create($userData);
+                
+                if($created) {
+                    Session::flash('success', 'You have registered successfully');
+                    header('Location: index.php');
+                    exit();
+                } else {
+                    //echo "<br>Creation failed. Database Error: " . $user->getLastError() . "<br>";//for debugging purposes
+                }
+                
+            } catch(Exception $e) {
+                echo "Registration failed: " . $e->getMessage() . "<br>";//for debugging purposes
+                //echo "Error details: " . $e->getTraceAsString() . "<br>";//for debugging purposes
+            }
+        }else{
             //print_r($validation->errors()); this is to print the errors in the array format
             foreach($validation->errors() as $error){
                 echo $error, '<br>';
             }
-        }else{
-            Session::flash('success', 'You have registered successfully');
-            header('Location: index.php');
         }
        
     }
