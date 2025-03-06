@@ -54,7 +54,7 @@ ini_set('display_errors', 1);
                 ];
                 //var_dump($userData);//for debugging purposes
                 
-                //echo "<br>About to attempt user creation...<br>";//for debugging purposes
+                //echo "<br>Abthout to attempt user creation...<br>";//for debugging purposes
                 
                 $created = $user->create($userData);
                 
