@@ -10,10 +10,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
     require_once 'core/init.php';
+    //var_dump(Token::check(Input::get('token')));//this is see if the token check is working
     if(Input::exists()){
         //echo "Input exists";
         //echo Input::get('username');//this is to show that the data is getting from the post or get
-       $validate = new Validate();
+        if(Token::check(Input::get('token'))){
+            //the token class is used to prevent cross-site request forgery attacks
+            //echo "Token is valid" . '<br>';
+            $validate = new Validate();
        $validation = $validate->check($_POST, [
         'name' => [
             'required' => true,
@@ -43,7 +47,9 @@ ini_set('display_errors', 1);
         }else{
             echo "Validation passed";
         }
+       
     }
+}
     ?>
     <form action="" method="post">
     <div class="field">
@@ -62,7 +68,7 @@ ini_set('display_errors', 1);
             <label for="confirm_password">Confirm Password</label>
             <input type="password" name="confirm_password" id="confirm_password" value="" autocomplete="off">
         </div> <br>
-        
+        <input type="hidden" name="token" value="<?php echo Token::generate(); //this is to generate a token for the form?>">
         <input type="submit" value="Register">
     </form>
 </body>
