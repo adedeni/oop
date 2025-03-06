@@ -45,7 +45,8 @@ ini_set('display_errors', 1);
                 echo $error, '<br>';
             }
         }else{
-            echo "Validation passed";
+            Session::flash('success', 'You have registered successfully');
+            header('Location: index.php');
         }
        
     }

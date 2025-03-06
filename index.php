@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
 </head>
-<body>    
+<body> 
+    <h1>This is index</h1>   
     <?php
     require_once 'core/init.php'; 
     //var_dump(config::get('mysql/host'));//this is to check if the config is loaded successfully
@@ -66,6 +67,9 @@
     //     echo "Data not updated.<br>";
     //     echo "SQL Error Message: " . $db->getError() . "<br>";
     // }
+        if(Session::exists('success')){//this is to show flash the success message after the user registers successfully
+            echo Session::flash('success');
+        }
     ?>
 </body>
 </html>

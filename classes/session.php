@@ -17,4 +17,15 @@ class Session{
             unset($_SESSION[$name]);
         }
     } 
+    //flashing data to the session is a way to display a message to the user after a form is submitted and then the message is deleted from the session after the user sees the message
+    public static function flash($name, $string = ''){
+        if(self::exists($name)){
+            $session = self::get($name);
+            self::delete($name);
+            return $session;
+        }else{
+            self::put($name, $string);
+        }
+    }
 }
+
