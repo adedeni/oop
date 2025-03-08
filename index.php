@@ -70,6 +70,17 @@
         if(Session::exists('success')){//this is to show flash the success message after the user registers successfully
             echo Session::flash('success');
         }
+        echo Session::get(Config::get('session/session_name'));//this is to show the id of the user in the session
+        die();
+        $user = new User(19);
+        if(Session::exists($this->_sessionName)){
+            $user = new User(Session::get($this->_sessionName));
+            if($user->exists()){
+                echo "You are logged in";
+            }else{
+                echo "You are not logged in";
+            }
+        }
     ?>
 </body>
 </html>
