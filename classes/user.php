@@ -9,6 +9,7 @@ class User{
     public function __construct($user = null){
         $this->_db = DB::getInstance();
         $this->_sessionName = Config::get('session/session_name');//this is to get the session name from the init.php file
+        $this->_cookieName = Config::get('remember/cookie_name');//this is to get the cookie name from the ini file
         if(!$user){
             if(Session::exists($this->_sessionName)){
                 $user = Session::get($this->_sessionName);
@@ -21,8 +22,7 @@ class User{
             }
         }else{
             $this->find($user);//this will allow us to grab the data of the user that is notlogged in
-        } 
-        $this->_cookieName = Config::get('remember/cookie_name');//this is to get the cookie name from the ini file
+        }
     }
     public function create($fields = []) {
         try {
@@ -35,7 +35,7 @@ class User{
                 throw new Exception('Database Error: ' . $dbError);
             }
             return true;
-        } catch(Exception $e) {
+        } catch(Exception $e) {  
             throw $e; // Re-throw the exception with the database error
         }
     }
@@ -56,23 +56,52 @@ class User{
         }
         return false;
     }
-    public function login($username = null, $password = null){//set the variables to null by default
-        $user = $this->find($username);
+
+    public function login($username = null, $password = null, $remember = false){//set the variables to null or false by default
+
         // print_r($this->_data);//for debugging purposes to see if the data is found
         // die();
-        if($user){
-            if($this->data()->password === Hash::make($password, $this->data()->salt)){//this is to check the hashed password in the database with the password submitted in the form
-                // echo "Password is correct";
-                // die();
-                Session::put($this->_sessionName, $this->data()->id);  //this is to put the user id in the session
-                return true;
+        if(!$username && !$password && $this->exists()) {//this is to allow user that have not supplied username or password but their cookie is still active to login
+            Session::put($this->_sessionName, $this->data()->id);//this is the  new User that was set in init line 35
+        } else {
+            $user = $this->find($username);
+
+            if($user){
+                if($this->data()->password === Hash::make($password, $this->data()->salt)){//this is to check the hashed password in the database with the password submitted in the form
+                    // echo "Password is correct";
+                    // die();
+                    Session::put($this->_sessionName, $this->data()->id);  //this is to put the user id in the session
+                    if($remember){
+                        $hash = Hash::unique();//generate a unique hash
+                        $hashCheck = $this->_db->get('users_session', ['user_id', '=', $this->data()->id]);//check if the hash already exists in the database, the user_id is the column name in the database where the user id is stored, the user_session table is the table name in the database where the user id and the hash are stored
+                        // if($hashCheck->count()){
+                        //     $this->_db->update('users_session', ['id', '=', $hashCheck->first()->id], [
+                        //         'hash' => $hash
+                        //     ]);//if the hash already exists in the database, then update the hash, the id is the column name in the database where the id is stored, the hash is the column name in the database where the hash is stored
+                            if(!$hashCheck->count()){
+                                $this->_db->insert('users_session', [
+                                    'user_id' => $this->data()->id,
+                                    'hash' => $hash
+                                ]);
+                            } else{
+                        $hash = $hashCheck->first()->hash;
+                        }
+                        Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
+                    } 
+                    return true;
+                } 
             }
         }
         return false;
     }
+
+    public function exists(){
+        return (!empty($this->data)) ? true : false;
+    }
     public function logout(){
+        $this->_db->delete('users_session', ['user_id', '=', $this->data()->id]);
         Session::delete($this->_sessionName);
-        Session::delete($this->_cookieName);
+        Cookie::delete($this->_cookieName);
         Session::delete('success');
     } 
     public function data(){

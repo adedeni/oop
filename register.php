@@ -99,7 +99,7 @@ ini_set('display_errors', 1);
         </div> <br>
         <input type="hidden" name="token" value="<?php echo Token::generate(); //this is to generate a token for the form?>">
         <input type="submit" value="Register">
-    </form>
+    </form> <br>
     <a href="login.php" target="_blank">Login</a>
 </body>
 </html>

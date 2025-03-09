@@ -24,3 +24,13 @@ spl_autoload_register(function($class){
 });
 
 require_once 'functions/sanitize.php';
+if(Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Config::get('session/session_name'))) {
+   // echo 'this user is remembered';//to check if the user is Remembered 
+   $hash = Cookie::get(Config::get('remember/cookie_name'));
+   $hashCheck = DB::getInstance()->get('users_session', ['hash', '=', $hash]);
+   if($hashCheck->count()){
+    //echo 'hash exists login new user';
+    $user = new User($hashCheck->first()->user_id);//if the hash exists in the database, 
+    $user->login();
+   }
+}

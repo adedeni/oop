@@ -11,6 +11,7 @@
     ini_set('display_errors', 1);
     require_once 'core/init.php';
     if(Input::exists()){
+        Input::get('remember') ? 'Yes' : 'No';//this is to get the remember me from the form
         //echo "Input exists";//this is to check if the form submitted some inputs
         if(Token::check(Input::get('token'))) {//this is to check if the token is valid
             $validate = new Validate();
@@ -21,7 +22,8 @@
             if($validation->passed()){
                 //echo "Validation passed";//for debugging purposes to see if the validation passed
                 $user = new User();//make a new user object
-                $login = $user->login(Input::get('username'), Input::get('password'));//pass the username and password to the login method
+                $remember = (Input::get('remember') === 'on') ? true : false; //this is to check if the remember me checkbox is checked
+                $login = $user->login(Input::get('username'), Input::get('password'), $remember);//pass the username, password and remember me to the login method
                 if($login){
                     //echo "Login successful";//for debugging purposes to see if the login was successful
                     Session::flash('success', 'You have been logged in');
@@ -51,7 +53,12 @@
        <div class="field">
         <label for="password">Password</label>
         <input type="password" name="password" id="password" placeholder="Enter your password" required autocomplete="off">
-       </div>
+       </div> <br>
+       <div class="field">
+       <label for="remember">
+        <input type="checkbox" name="remember" id="remember"><span>   </span>Remember me
+        </label>
+       </div> <br>
        <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
        <input type="submit" name="login" value="Log in">
     </form> <br>

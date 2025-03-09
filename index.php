@@ -82,8 +82,11 @@
             </ul>
             <?php
         }else{
-            echo "You need to <a href='login.php'>Login</a> or <a href='register.php'>Register</a>";
+            // Session::flash('home', 'You need to <a href="login.php">Login</a> or <a href="register.php">Register</a>');
+            // Redirect::to('login.php');
+            //echo "You need to <a href='login.php'>Login</a> or <a href='register.php'>Register</a>";
         } 
     ?>
+    
 </body>
 </html>

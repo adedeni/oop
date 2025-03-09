@@ -83,7 +83,7 @@ public function delete($table, $where){//this is to delete data from the databas
 }
 
 public function insert($table, $fields = []) {
-    try {
+    //try {//for debugging purposes
         $keys = array_keys($fields);
         $values = '';
         $x = 1;
@@ -103,19 +103,22 @@ public function insert($table, $fields = []) {
         // echo "Values: ";
         // var_dump(array_values($fields));
         
-        $query = $this->query($sql, $fields);
-        
-        if($query->error()) {
-            $this->_errorMessage = $query->_query->errorInfo()[2];
-            echo "Database Error: " . $this->_errorMessage . "<br>";
-            return false;
+       // $query = $this->query($sql, $fields);//for debugging purposes with the try catch block
+        if(!$this->query($sql, $fields)->error()){
+            return true;
         }
-        return true;
-    } catch(Exception $e) {
-        $this->_errorMessage = $e->getMessage();
-        echo "Exception: " . $this->_errorMessage . "<br>";
         return false;
-    }
+        // if($query->error()) {
+        //     $this->_errorMessage = $query->_query->errorInfo()[2];
+        //     echo "Database Error: " . $this->_errorMessage . "<br>";
+        //     return false;
+        // }
+        // return true;
+    // } catch(Exception $e) {
+    //     $this->_errorMessage = $e->getMessage();
+    //     echo "Exception: " . $this->_errorMessage . "<br>";
+    //     return false;
+    // }
 }
 
 public function update($table, $id, $fields = []) {
