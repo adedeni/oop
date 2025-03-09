@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
 </head>
 <body>
     <?php
@@ -23,7 +23,10 @@
                 $user = new User();//make a new user object
                 $login = $user->login(Input::get('username'), Input::get('password'));//pass the username and password to the login method
                 if($login){
-                    echo "Login successful";
+                    //echo "Login successful";//for debugging purposes to see if the login was successful
+                    Session::flash('success', 'You have been logged in');
+                    Redirect::to('index.php');
+                    
                 }else{
                     echo "Login failed";
                 }

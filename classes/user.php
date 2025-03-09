@@ -3,18 +3,25 @@ class User{
     private $_db,
     $_data,
     $_sessionName,
-    $_cookieName;
+    $_cookieName,
+    $_isLoggedIn;
 
     public function __construct($user = null){
         $this->_db = DB::getInstance();
         $this->_sessionName = Config::get('session/session_name');//this is to get the session name from the init.php file
-        if(!$user){//
+        if(!$user){
             if(Session::exists($this->_sessionName)){
                 $user = Session::get($this->_sessionName);
-            }else{
-                $user = null;
+                if($this->find($user)){//this is to help us grab the data of the user that is logged in
+                    $this->_isLoggedIn = true;
+                } else {
+                    // Log out current user
+                    $this->logout();
+                }
             }
-        }
+        }else{
+            $this->find($user);//this will allow us to grab the data of the user that is notlogged in
+        } 
         $this->_cookieName = Config::get('remember/cookie_name');//this is to get the cookie name from the ini file
     }
     public function create($fields = []) {
@@ -63,7 +70,15 @@ class User{
         }
         return false;
     }
+    public function logout(){
+        Session::delete($this->_sessionName);
+        Session::delete($this->_cookieName);
+        Session::delete('success');
+    } 
     public function data(){
         return $this->_data;
+    }
+    public function isLoggedIn(){
+        return $this->_isLoggedIn;
     }
 }
