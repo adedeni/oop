@@ -24,6 +24,16 @@ class User{
             $this->find($user);//this will allow us to grab the data of the user that is notlogged in
         }
     }
+
+    public function update($fields = [], $id = null){
+        if(!$id && $this->isLoggedIn()){//this is to be able to update the user data without having to specify the id, for example updating the user details from the admin side
+            $id = $this->data()->id;
+        }
+        if(!$this->_db->update('users', $id, $fields)){
+            throw new Exception('There was a problem updating');
+        }
+    }
+
     public function create($fields = []) {
         try {
             // Debug: Print SQL query before execution

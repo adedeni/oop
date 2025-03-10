@@ -78,6 +78,7 @@
             ?>
             <p>Welcome, <?php echo $user->data()->username; ?>!</p>
             <ul>
+            <li><a href="update.php">Update Profile</a></li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
             <?php
@@ -85,8 +86,13 @@
             // Session::flash('home', 'You need to <a href="login.php">Login</a> or <a href="register.php">Register</a>');
             // Redirect::to('login.php');
             //echo "You need to <a href='login.php'>Login</a> or <a href='register.php'>Register</a>";
+            ?>
+            <ul>
+                <li><a href="logout.php">Logout</a></li>
+            </ul>
+            <?php
         } 
     ?>
-    
+
 </body>
 </html>
