@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Update Profile</title>
 </head>
 <body>
     <?php
@@ -23,11 +23,7 @@
                         'required' => true,
                         'min' => 2,
                         'max' => 50
-                    ],
-                    // 'password' => [
-                    //     'required' => true,
-                    //     'min' => 6,
-                    // ]
+                    ]
                     ]);
                     if($validation->passed()){
                         try {
@@ -50,14 +46,6 @@
             <label for="name">Name</label>
             <input type="text" name="name" id="name" value="<?php echo escape($user->data()->name); ?>">
         </div> <br>
-        <!-- <div class="field">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" value="">
-        </div> <br>
-        <div class="field">
-            <label for="confirm_password">Confirm Password</label>
-            <input type="password" name="confirm_password" id="confirm_password" value="">
-        </div> <br> -->
         <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
         <input type="submit" value="Update">
     </form>
