@@ -78,6 +78,7 @@
             ?>
             <p>Welcome, <?php echo $user->data()->username; ?>!</p>
             <ul>
+                <li><a href="profile.php?user=<?php echo escape($user->data()->username);?>"><?php echo $user->data()->username; ?>'s Profile</a></li>
             <li><a href="update.php">Update Profile</a></li>
             <li><a href="changepassword.php">Change Password</a></li>
                 <li><a href="logout.php">Logout</a></li>
