@@ -83,6 +83,15 @@
                 <li><a href="logout.php">Logout</a></li>
             </ul>
             <?php
+            // if(!$user->hasPermission('admin')){
+            //     echo 'You are not an admin';
+            //     Redirect::to('index.php');//incase you want to disable access to the page from users who are not admins
+            // }
+            if($user->hasPermission('moderator')){
+                echo 'You are a moderator' . "!";
+            } else {
+                echo 'You are not a moderator'. "!";
+            }
         }else{
             // Session::flash('home', 'You need to <a href="login.php">Login</a> or <a href="register.php">Register</a>');
             // Redirect::to('login.php');

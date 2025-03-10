@@ -105,6 +105,19 @@ class User{
         return false;
     }
 
+    public function hasPermission($key){
+        $group = $this->_db->get('groups', ['id', '=', $this->data()->group]);
+        //print_r($group->first());//for debugging purposes to see the group data
+        if($group->count()){
+           //echo $permissions = $group->first()->permissions;
+            $permissions = json_decode($group->first()->permissions, true);
+            //print_r($permissions);
+            if($permissions[$key]){
+                return true;
+            }
+            return false;
+        }
+    }
     public function exists(){
         return (!empty($this->data)) ? true : false;
     }
